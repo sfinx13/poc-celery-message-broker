@@ -1,0 +1,2 @@
+zeep==4.1.0
+xmltodict==0.12.0

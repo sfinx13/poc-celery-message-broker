@@ -1,0 +1,4 @@
+.history/
+__pycache__/
+env/
+sqlite.db
