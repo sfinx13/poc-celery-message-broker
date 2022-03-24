@@ -29,6 +29,6 @@ class LoggerDecorator:
                 function.__name__, "%.3f" % (time.time() - start))
             )
 
-            self.logger.debug('[end] Response data {}'.format(response.result))
+            self.logger.debug('[end] Response data {}'.format(response.data))
             return response
         return wrapper
