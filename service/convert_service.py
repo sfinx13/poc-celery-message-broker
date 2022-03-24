@@ -1,5 +1,6 @@
 import time
 import xmltodict
+from service.logger_decorator import LoggerDecorator as logger
 from zeep import Client
 from zeep.cache import SqliteCache, InMemoryCache
 from zeep.transports import Transport
@@ -7,12 +8,12 @@ from service.abstract_service import AbstractService
 
 
 class NumberResponse:
-    def __init__(self, status, result):
+    def __init__(self, status, data):
         self.status = status
-        self.result = result
+        self.data = data
 
     def __str__(self):
-        return self.result
+        return self.data
 
 
 class ConvertNumberService(AbstractService):
@@ -21,55 +22,33 @@ class ConvertNumberService(AbstractService):
         cache = SqliteCache('sqlite.db', timeout=60)
         transport = Transport(cache=cache)
         self._client = Client(wsdl=wsdl, transport=transport)
-        self._logger = self.get_logger()
 
+    @logger('soap-logger')
     def to_words(self, number):
         """
         Returns the word corresponding to the positive number passed
         as parameter. Limited to quadrillions.
         """
 
-        self._logger.debug(
-            '[start] Request NumberToWords method({})'
-            .format(number)
-        )
-        start = time.time()
-
         with self._client.settings(raw_response=True):
             response = self._client.service.NumberToWords(number)
             content = xmltodict.parse(response.text)
 
             status_code = response.status_code
-            result = content['soap:Envelope']['soap:Body']['m:NumberToWordsResponse']['m:NumberToWordsResult']
-        
-        self._logger.debug(
-            '[end] Response NumberToWords with status code: {}, duration: {}s'
-            .format(status_code, "%.3f" % (time.time() - start))
-        )
+            data = content['soap:Envelope']['soap:Body']['m:NumberToWordsResponse']['m:NumberToWordsResult']
 
-        return NumberResponse(status_code, result)
+        return NumberResponse(status_code, data)
 
+    @logger('soap-logger')
     def to_dollars(self, number):
         """
         Returns the non-zero dollar amount of the passed number.
         """
-        start = time.time()
-        self._logger.debug(
-            '[start] Request NumberToDollars method({})'
-            .format(number)
-        )
-
         with self._client.settings(raw_response=True):
             response = self._client.service.NumberToDollars(number)
             content = xmltodict.parse(response.text)
 
             status_code = response.status_code
-            result = content['soap:Envelope']['soap:Body']['m:NumberToDollarsResponse']['m:NumberToDollarsResult']
+            data = content['soap:Envelope']['soap:Body']['m:NumberToDollarsResponse']['m:NumberToDollarsResult']
 
-        self._logger.debug(
-            '[end] Response NumberToDollars with status code {}, duration: {}s'
-            .format(status_code, "%.3f" % (time.time() - start))
-        )
-
-        return NumberResponse(status_code, result)
-
+        return NumberResponse(status_code, data)
