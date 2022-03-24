@@ -1,8 +1,9 @@
 import time
 import xmltodict
+import json
 from service.logger_decorator import LoggerDecorator as logger
 from zeep import Client
-from zeep.cache import SqliteCache, InMemoryCache
+from zeep.cache import InMemoryCache
 from zeep.transports import Transport
 from service.abstract_service import AbstractService
 
@@ -15,11 +16,14 @@ class NumberResponse:
     def __str__(self):
         return self.data
 
+    def to_json(self):
+        return json.dumps(self, default=lambda object: object.__dict__)
+
 
 class ConvertNumberService(AbstractService):
     def __init__(self):
         wsdl = self.get_parameter('wsdl_number_conversion_service')
-        cache = SqliteCache('sqlite.db', timeout=60)
+        cache = InMemoryCache(timeout=120)
         transport = Transport(cache=cache)
         self._client = Client(wsdl=wsdl, transport=transport)
 
