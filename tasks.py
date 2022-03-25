@@ -7,7 +7,7 @@ redis_url = parameter_service.get_parameter('redis_url')
 
 app = Celery('tasks', broker=redis_url, backend=redis_url)
 
-@app.task(serializer='json')
+@app.task()
 def convert_to_word(number):
     convert_number_service = ConvertNumberService()
     return convert_number_service.to_words(number).to_json()
