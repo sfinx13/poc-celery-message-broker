@@ -7,4 +7,4 @@ class AbstractService(ABC):
         parser = configparser.ConfigParser()
         parser.read("./config/settings.ini")
 
-        return parser["wsdl_client"].get(key)
+        return parser["app"].get(key)
