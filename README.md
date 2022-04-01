@@ -71,8 +71,8 @@ $ python
 
 * [SOAP Service Mocking Overview](https://www.soapui.org/docs/soap-mocking/service-mocking-overview/)
 
-## @Todo
-SOAP SERVER with wiremock
+## @Todo : try to replace the current soap mock server by wiremock
+
 * https://stackoverflow.com/questions/35974249/using-wiremock-with-soap-web-services-in-java
 * https://wiremock.readthedocs.io/en/latest/index.html
 * https://dev.to/adevintaspain/testing-with-wiremock-docker-2gh9
