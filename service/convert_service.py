@@ -1,5 +1,5 @@
-import time
-import xmltodict
+from enum import Enum
+import re
 import json
 from service.logger_decorator import LoggerDecorator as logger
 from zeep import Client
@@ -20,7 +20,12 @@ class NumberResponse:
         return json.dumps(self, default=lambda object: object.__dict__)
 
 
-class ConvertNumberService(AbstractService):
+class PatternResponse(Enum):
+    SERVICE_TO_WORDS =  r":NumberToWordsResult>(.*?)<"
+    SERVICE_TO_DOLLARS =  r":NumberToDollarsResult>(.*?)<"
+
+
+class ConvertNumberService(AbstractService):    
     def __init__(self):
         wsdl = self.get_parameter('wsdl_number_conversion_service')
         cache = InMemoryCache(timeout=120)
@@ -33,14 +38,18 @@ class ConvertNumberService(AbstractService):
         Returns the word corresponding to the positive number passed
         as parameter. Limited to quadrillions.
         """
+        try:        
+            with self._client.settings(raw_response=True):
+                response = self._client.service.NumberToWords(number)
+                status_code = response.status_code
+                regex = PatternResponse.SERVICE_TO_WORDS.value
 
-        with self._client.settings(raw_response=True):
-            response = self._client.service.NumberToWords(number)
-            content = xmltodict.parse(response.text)
-
-            status_code = response.status_code
-            data = content['soap:Envelope']['soap:Body']['m:NumberToWordsResponse']['m:NumberToWordsResult']
-
+                data = re.findall(regex, response.text)[0]
+        except Exception as err:
+            status_code = 500
+            data = json.dumps({})
+            print(err)
+        
         return NumberResponse(status_code, data)
 
     @logger('soap-logger')
@@ -48,11 +57,15 @@ class ConvertNumberService(AbstractService):
         """
         Returns the non-zero dollar amount of the passed number.
         """
-        with self._client.settings(raw_response=True):
-            response = self._client.service.NumberToDollars(number)
-            content = xmltodict.parse(response.text)
-
-            status_code = response.status_code
-            data = content['soap:Envelope']['soap:Body']['m:NumberToDollarsResponse']['m:NumberToDollarsResult']
+        try:
+            with self._client.settings(raw_response=True):
+                response = self._client.service.NumberToDollars(number)
+                status_code = response.status_code
+                regex = PatternResponse.SERVICE_TO_DOLLARS.value
+                data = re.findall(regex, response.text)[0]
+        except Exception as err:
+            status_code = 500
+            data = json.dumps({})
+            print(err)
 
         return NumberResponse(status_code, data)

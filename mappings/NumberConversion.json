@@ -1,0 +1,20 @@
+{
+  "request": {
+    "url": "/webservicesserver/NumberConversion.wso?WSDL",
+    "method": "POST"
+  },
+  "response": {
+    "status": 200,
+    "bodyFileName": "NumberConversionResponse.xml",
+    "headers": {
+      "Server": "Microsoft-IIS/8.0",
+      "Access-Control-Allow-Origin": "https://www.dataaccess.com",
+      "Access-Control-Allow-Methods": "GET, POST",
+      "Access-Control-Allow-Headers": "content-type",
+      "Date": "Tue, 26 Jun 2018 07:45:47 GMT",
+      "Strict-Transport-Security": "max-age=31536000",
+      "Cache-Control": "private, max-age=0",
+      "Content-Type": "text/xml; charset=utf-8"
+    }
+  }
+}

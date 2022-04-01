@@ -1,0 +1,14 @@
+version: '3.7'
+services:
+  wiremock-api:
+    container_name: demo-wiremock-api
+    image: wiremock/wiremock:2.32.0
+    ports:
+      - "8081:8080"
+    volumes:
+      - .:/home/wiremock
+  redis:
+    container_name: demo-redis
+    image: redis:alpine
+    ports:
+      - "6379:6379"

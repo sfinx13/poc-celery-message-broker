@@ -1,5 +1,6 @@
 # Asynchronous tasks with celery 
 Demo made with zeep as soap client and celery to manage the request asynchronously
+Add a mock-server for soap endpoint 
 
 ## Installation
 
@@ -18,10 +19,9 @@ source env/bin/activate
 pip install -R requirements.txt
 ```
 
-> Use Redis as message broker via docker 
+> Install dependencies wiremock + redis 
 ```
-docker run -d 6379:6379 redis
-docker ps
+docker-compose up -d
 ```
 
 ## Usage
@@ -32,20 +32,30 @@ docker ps
 celery -A tasks worker --loglevel=INFO
 ```
 
-> Call the task
+> Call the task to_words
 
 ```
 $ python
->>> from tasks import convert_to_word
->>> result = convert_to_add.delay(56324)
+>>> from tasks import convert_to_words
+>>> result = convert_to_words.delay(56324)
 >>> result.status
 'SUCCESS'
 ```
 
+> Call the task to_dollars
+
+```
+$ python
+>>> from tasks import convert_to_dollars
+>>> result = convert_to_dollars.delay(56324)
+>>> result.status
+'SUCCESS'
+```
+
+
 > See what happend in worker terminal
 
-![Screen](__DOC__/screen_worker.jpg)
-
+![Screen](__DOC/screen_worker.jpg)
 
 
 ## Documentation
@@ -59,3 +69,12 @@ $ python
 
 * [Celery guide](https://docs.celeryq.dev/en/stable/userguide/index.html#guide)
 
+* [SOAP Service Mocking Overview](https://www.soapui.org/docs/soap-mocking/service-mocking-overview/)
+
+## @Todo
+SOAP SERVER with wiremock
+* https://stackoverflow.com/questions/35974249/using-wiremock-with-soap-web-services-in-java
+* https://wiremock.readthedocs.io/en/latest/index.html
+* https://dev.to/adevintaspain/testing-with-wiremock-docker-2gh9
+* https://wiremock.org/docs/request-matching/
+* https://www.taheramlaki.com/blog/articles/wiremock-stubbing-and-response-templating/
