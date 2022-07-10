@@ -16,16 +16,29 @@ source env/bin/activate
 
 > Install packages with pip
 ```
-pip install -R requirements.txt
+pip install -r requirements.txt
 ```
 
 > Install dependencies wiremock + redis 
 ```
 docker-compose up -d
 ```
+## [Mock server] Prerequisite 
+
+Import packed project from soap-ui/test-soap-soapui-project.xml.zip
+
+https://support.smartbear.com/readyapi/docs/projects/import.html
+
+Launch mock server
+https://www.soapui.org/docs/soap-mocking/service-mocking-overview/
+
+Uncommment mock config/settings.ini and comment real api 
+```
+### MOCK API (SOAP-UI)
+wsdl_number_conversion_service = http://localhost:8088/NumberConversion.wso?WSDL
+```
 
 ## Usage
-
 > Run celery worker server
 
 ```
