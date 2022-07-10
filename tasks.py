@@ -19,5 +19,3 @@ def convert_to_dollars(number):
     sleep(5)
     convert_number_service = ConvertNumberService()
     return convert_number_service.to_dollars(number).to_json()
-
-

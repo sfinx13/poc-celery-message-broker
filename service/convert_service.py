@@ -21,8 +21,8 @@ class NumberResponse:
 
 
 class PatternResponse(Enum):
-    SERVICE_TO_WORDS =  r":NumberToWordsResult>(.*?)<"
-    SERVICE_TO_DOLLARS =  r":NumberToDollarsResult>(.*?)<"
+    SERVICE_TO_WORDS = r":NumberToWordsResult>(.*?)<"
+    SERVICE_TO_DOLLARS = r":NumberToDollarsResult>(.*?)<"
 
 
 class ConvertNumberService(AbstractService):    
